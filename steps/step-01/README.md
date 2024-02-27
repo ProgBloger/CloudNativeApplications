@@ -6,19 +6,19 @@
 
 ### Login to the Azure CLI
 
-In Visual Studio Code, open a terminal and run az login to sign into Azure (requires an active subscription):
+1. In Visual Studio Code, open a terminal and run az login to sign into Azure (requires an active subscription):
 
 ```
 az login
 ```
 
-If you have multiple subscriptions with your Azure account get a list all your subscriptions:
+2. If you have multiple subscriptions with your Azure account get a list all your subscriptions:
 
 ```
 az account list -o table
 ```
 
-Find the correct SubscriptionId and activate it:
+3. Find the correct SubscriptionId and activate it:
 
 ```
 az account set -s <SubscriptionId>
@@ -26,13 +26,13 @@ az account set -s <SubscriptionId>
 
 ### Login to Azure in Visual Studio Code
 
-In Visual Studio, press Ctrl+Shift+P to open the Command Palette and search for "Azure: Sign In" to link your account:
+1. In Visual Studio, press Ctrl+Shift+P to open the Command Palette and search for "Azure: Sign In" to link your account:
 
 ![Azure: Sign In from Visual Studio Code](azure-sign-in-screen-shot.png)
 
-Log in through the opened browser with your Microsoft account linked to Azure, completing all authentication steps to gain access.
+2. Log in through the opened browser with your Microsoft account linked to Azure, completing all authentication steps to gain access.
 
-In Visual Studio Code, use the Command Palette to select your active subscriptions, marking your choices with checkboxes:
+3. In Visual Studio Code, use the Command Palette to select your active subscriptions, marking your choices with checkboxes:
 
 
 ![Azure: Select Subscriptions](azure-select-subscriptions-screen-shot.png)

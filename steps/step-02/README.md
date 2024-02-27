@@ -4,72 +4,64 @@
 
 ## Step 2 - Containerize a .NET Core Worker Service
 
-Use the Command Palette inside Visual Studio Code to create a new .NET Core application:
+1. Run `dotnet new worker -n WorkerService` in the terminal to create the .net worker project:
 
-![dotnet new](sshot-7.png)
+![creating new service](worker-service-new-screen-shot.png)
 
-Select the Worker Service template:
+2. Open project folder in VS Code and run it:
 
-![dotnet new](sshot-8.png)
+![running service](worker-service-run-screen-shot.png)
 
-Create a folder and specify that name as the project name:
+3. Stop the worker.
 
-```
-WorkerService
-```
-
-![dotnet new](sshot-9.png)
-
-Open the project folder in Visual Studio Code and open a terminal pane.
-Type the following command to run your created Worker Service:
-
-```
-dotnet run
-```
-
-Now open the Worker.cs file and make a small change to the existing code:
+4. Modify the Worker.cs file with a minor code change:
 
 ```csharp
 protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 {
     while (!stoppingToken.IsCancellationRequested)
     {
-        _logger.LogInformation($"Worker Service running on {Environment.MachineName}");
-        await Task.Delay(5000, stoppingToken);
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation($"Worker Service running on: {Environment.MachineName}");
+        }
+        await Task.Delay(1000, stoppingToken);
     }
 }
 ```
 
-Run the Worker Service again from the console and see the result. Every five seconds, it should print your machine name to the terminal.
+5. Restart the Worker Service from the console to see your machine name printed every five seconds.
 
-In order to create a Docker container from this code, open the Command Palette in Visual Studio Code and find the command to create a docker file:
+6. To create a Docker container, open Visual Studio Code's Command Palette and locate the command for Docker file creation.
 
-![dotnet new](sshot-10.png)
+![docker add command](dockerfile-add-screen-shot.png)
 
-Select the .NET Core Console application platform for Linux and don't include the optional Docker Compose files:
+7. Choose .NET Core Console application for Linux without Docker Compose files.
 
-![dotnet new](sshot-11.png)
+![project type selection](dockerfile-proj-type-screen-shot.png)
 
-![dotnet new](sshot-12.png)
+![container type selection](dockerfile-container-type-screen-shot.png)
 
-![dotnet new](sshot-13.png)
+![optional files selection](dockerfile-optional-screen-shot.png)
 
-The generated docker file is a script you can use to build a docker image. Right-click the file contents and select Build Image...
+8. Right-click the Docker file and select "Build Image" to create a Docker image.
 
-![dotnet new](sshot-14.png)
+![building image of the dockerfile](dockerfile-build-image-screen-shot.png)
 
-Your local Docker instance should now have the Docker image available. You can verify this by using the Docker icon on the left hand side of Visual Studio Code and looking at the list of images:
+9. Check the Docker image in VS Code's Docker sidebar:
 
-![dotnet new](sshot-15.png)
+![docker image](dockerfile-image-screen-shot.png)
 
-You can test the image by running it as a container. Right-click the latest-tag and select Run. You can find running containers in the list of containers:
+10. Test the image by right-clicking the latest tag and selecting "Run" to see it in the containers list.
 
-![dotnet new](sshot-16.png)
+![running the container](docker-image-run-screen-shot.png)
 
-Right click the running container and choose View Logs. Your active terminal window should show the Console output from your WorkerService:
+11. View container logs by right-clicking it and selecting "View Logs" to see WorkerService output in the terminal.
 
-![dotnet new](sshot-17.png)
+![view logs](docker-image-view-logs-screen-shot.png)
 
-Finally, go ahead and stop the running container to free up some system resources.
+![container logs](docker-image-logs-screen-shot.png)
+
+Stop the container to free system resources.
 
 [Previous step](../step-01/README.md) - [Next step](../step-03/README.md)
