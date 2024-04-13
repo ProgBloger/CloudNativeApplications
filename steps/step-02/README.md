@@ -8,7 +8,7 @@
 
 ![creating new service](worker-service-new-screen-shot.png)
 
-2. Open project folder in VS Code and run it:
+2. Open project folder in VS Code and run it using the `dotnet run` command:
 
 ![running service](worker-service-run-screen-shot.png)
 
@@ -44,7 +44,7 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 
 ![optional files selection](dockerfile-optional-screen-shot.png)
 
-8. Right-click the Docker file and select "Build Image" to create a Docker image.
+8. Ensure Docker is running, then right-click the Docker file and select "Build Image" to create a Docker image.
 
 ![building image of the dockerfile](dockerfile-build-image-screen-shot.png)
 
