@@ -1,49 +1,33 @@
 # Cloud Native Applications
 
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-03/README.md) - [Next step](../step-05/README.md)
 
-## Step 1 - Connect Visual Studio Code to your Azure Subscription
+## Step 4 - Create the AKS (Azure Kubernetes Service) resource in your Azure subscription
 
-### Login to the Azure CLI
+1. Find Kubernetes services in the Azure portal search:
 
-Open a terminal window, for example inside Visual Studio Code and use the following command to login to Azure:
+![finding kubernetes services](sshot-4-1.png)
 
-```
-az login
-```
+2. Click "Create" and select "Create a Kubernetes cluster":
 
-If you have multiple subscriptions with your Azure account use the following command to list all your subscriptions:
+![creating kubernetes services](sshot-4-2.png)
 
-```
-az account list -o table
-```
+3. Setup name and configuration:
 
-Find the correct SubscriptionId and activate it using the following command:
+![setup configuration and name](sshot-4-3.png)
 
-```
-az account set -s <SubscriptionId>
-```
+![creating kubernetes services](sshot-4-4.png)
 
-### Login to Azure in Visual Studio Code
+4. Select D2s_v3 for the node size and configure 3 nodes with manual scaling (subject to change):
 
-From Visual Studio, use the Ctrl+Shift+P keyboard shortcut to open the Command Palette and find Azure: Sign In to link your Visual Studio code instance with your azure login:
+![creating kubernetes services](sshot-4-5.png)
 
-![Azure: Sign In from Visual Studio Code](sshot-2.png)
+![creating kubernetes services](sshot-4-6.png)
 
-Your browser will open and you need to login using the Microsoft account linked to your Azure subscription:
+![creating kubernetes services](sshot-4-7.png)
 
-![Microsoft Account](sshot-3.png)
+![creating kubernetes services](sshot-4-8.png)
 
-If your login was successful, you should be presented with a success screen:
+No additional changes needed; complete the wizard to create the cluster
 
-![Azure: Sign In from Visual Studio Code](sshot-4.png)
-
-Use the Command Palette in Visual Studio once more to select the active subscription:
-
-![Azure: Sign In from Visual Studio Code](sshot-5.png)
-
-Inside the Visual Studio Code IDE, you can have multiple subscriptions active. Use the checkboxes to make your selections:
-
-![Azure: Sign In from Visual Studio Code](sshot-6.png)
-
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-03/README.md) - [Next step](../step-05/README.md)
