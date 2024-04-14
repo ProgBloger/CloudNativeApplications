@@ -1,9 +1,12 @@
+using RestSharp;
+
 namespace WorkerService;
 
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
 
+            private readonly RestClient _client = new RestClient("http://webapi");
     public Worker(ILogger<Worker> logger)
     {
         _logger = logger;
@@ -13,11 +16,14 @@ public class Worker : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Worker Service running on: {Environment.MachineName}");
-            }
-            await Task.Delay(1000, stoppingToken);
+            var request = new RestRequest("status", Method.Get);
+            var response = await _client.ExecuteAsync(request);
+
+            _logger.LogInformation($"RESPONSE: {response.StatusCode}, {response.Content}");
+
+            _logger.LogInformation($"hop hey lalaley");
+
+            await Task.Delay(500, stoppingToken);
         }
     }
 }
