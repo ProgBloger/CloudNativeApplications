@@ -1,49 +1,98 @@
 # Cloud Native Applications
 
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-06/README.md) - [Next step](../step-08/README.md)
 
-## Step 1 - Connect Visual Studio Code to your Azure Subscription
+## Step 7 - Expose the ASP.NET Core WebApi as a network service
 
-### Login to the Azure CLI
+1. Navigate to the folder containing the WorkerService project and run dotnet new webapi -n WebApi to create a Web API project:
 
-Open a terminal window, for example inside Visual Studio Code and use the following command to login to Azure:
+![creating web api project](sshot-7-1.png)
+
+2. Open the newly created WebApi folder in Visual Studio Code.
+
+3. Rename WeatherForecast to Status and update the API to return only the current machine name:
+
+```c#
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.MapGet("/status", () =>
+{
+    return Environment.MachineName;
+})
+.WithName("Status")
+.WithOpenApi();
+
+app.Run();
 
 ```
-az login
+
+### Building the WebApi Docker image
+
+1. Just like in step 02, add a Dockerfile using the Visual Studio Code command palette, selecting the ASP.NET Core application platform for Linux without optional Docker Compose files:
+
+![generating docker files](sshot-7-2.png)
+
+2. Right-click the Dockerfile and select "Build Image":
+
+![creating web api image](sshot-7-3.png)
+
+3. From the Docker Activity pane in Visual Studio Code, push the built image to your Azure Container Registry:
+
+![pushing web api image](sshot-7-4.png)
+
+![web api image in container registry](sshot-7-5.png)
+
+### Deploying WebApi to Kubernetes
+
+1. Similar to step 06, create a Kubernetes deployment to deploy your WebApi container with 3 replicas, ensuring three Pods are always running:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+      - name: webapi
+        image: acrcloudnativeappwe.azurecr.io/webapi:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
 ```
 
-If you have multiple subscriptions with your Azure account use the following command to list all your subscriptions:
+2. Apply the deployment script using the Visual Studio Code command palette:
 
-```
-az account list -o table
-```
+![deploying web api to kubernetes](sshot-7-6.png)
 
-Find the correct SubscriptionId and activate it using the following command:
+3. In the Kubernetes Activity Bar, locate your running Pods:
 
-```
-az account set -s <SubscriptionId>
-```
+![web api deployed to kubernetes](sshot-7-6.png)
 
-### Login to Azure in Visual Studio Code
 
-From Visual Studio, use the Ctrl+Shift+P keyboard shortcut to open the Command Palette and find Azure: Sign In to link your Visual Studio code instance with your azure login:
-
-![Azure: Sign In from Visual Studio Code](sshot-2.png)
-
-Your browser will open and you need to login using the Microsoft account linked to your Azure subscription:
-
-![Microsoft Account](sshot-3.png)
-
-If your login was successful, you should be presented with a success screen:
-
-![Azure: Sign In from Visual Studio Code](sshot-4.png)
-
-Use the Command Palette in Visual Studio once more to select the active subscription:
-
-![Azure: Sign In from Visual Studio Code](sshot-5.png)
-
-Inside the Visual Studio Code IDE, you can have multiple subscriptions active. Use the checkboxes to make your selections:
-
-![Azure: Sign In from Visual Studio Code](sshot-6.png)
-
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-06/README.md) - [Next step](../step-08/README.md)
