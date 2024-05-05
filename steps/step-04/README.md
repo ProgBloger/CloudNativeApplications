@@ -12,7 +12,7 @@
 
 ![creating kubernetes services](sshot-4-2.png)
 
-3. Setup name and configuration:
+3. Setup the `aks-cloud-native-app-we` name  and configuration:
 
 ![setup configuration and name](sshot-4-3.png)
 

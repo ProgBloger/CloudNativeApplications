@@ -15,8 +15,8 @@ spec:
   selector:
     app: webapi
   ports:
-  - port: 80
-    targetPort: 80
+  - port: 8080
+    targetPort: 8080
 ```
 
 2. Apply it using the Visual Studio Code command palette:
@@ -25,6 +25,6 @@ spec:
 
 3. Check the Kubernetes Activity pane and locate your newly created service within the Network node:
 
-![finding deployed webapi in kubernetes](sshot-8-1.png)
+![finding deployed webapi in kubernetes](sshot-8-2.png)
 
 [Previous step](../step-07/README.md) - [Next step](../step-09/README.md)

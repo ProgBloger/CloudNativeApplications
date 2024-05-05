@@ -4,7 +4,7 @@
 
 ## Step 7 - Expose the ASP.NET Core WebApi as a network service
 
-1. Navigate to the folder containing the WorkerService project and run dotnet new webapi -n WebApi to create a Web API project:
+1. Move to the parent directory of the WorkerService folder, then execute `dotnet new webapi -n WebApi` to create a Web API project:
 
 ![creating web api project](sshot-7-1.png)
 
@@ -40,21 +40,25 @@ app.Run();
 
 ```
 
+4. Edit the `launchSettings.json` file to update the web API application's port to `8080`:
+
+![changing the port number](sshot-7-2.png)
+
 ### Building the WebApi Docker image
 
 1. Just like in step 02, add a Dockerfile using the Visual Studio Code command palette, selecting the ASP.NET Core application platform for Linux without optional Docker Compose files:
 
-![generating docker files](sshot-7-2.png)
+![generating docker files](sshot-7-3.png)
 
 2. Right-click the Dockerfile and select "Build Image":
 
-![creating web api image](sshot-7-3.png)
+![creating web api image](sshot-7-4.png)
 
 3. From the Docker Activity pane in Visual Studio Code, push the built image to your Azure Container Registry:
 
-![pushing web api image](sshot-7-4.png)
+![pushing web api image](sshot-7-5.png)
 
-![web api image in container registry](sshot-7-5.png)
+![web api image in container registry](sshot-7-6.png)
 
 ### Deploying WebApi to Kubernetes
 
@@ -83,16 +87,16 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 ```
 
 2. Apply the deployment script using the Visual Studio Code command palette:
 
-![deploying web api to kubernetes](sshot-7-6.png)
+![deploying web api to kubernetes](sshot-7-7.png)
 
 3. In the Kubernetes Activity Bar, locate your running Pods:
 
-![web api deployed to kubernetes](sshot-7-6.png)
+![web api deployed to kubernetes](sshot-7-8.png)
 
 
 [Previous step](../step-06/README.md) - [Next step](../step-08/README.md)

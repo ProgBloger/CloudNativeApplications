@@ -1,29 +1,30 @@
 using RestSharp;
 
-namespace WorkerService;
-
-public class Worker : BackgroundService
+namespace WorkerService
 {
-    private readonly ILogger<Worker> _logger;
-
-            private readonly RestClient _client = new RestClient("http://webapi");
-    public Worker(ILogger<Worker> logger)
+    public class Worker : BackgroundService
     {
-        _logger = logger;
-    }
+        private readonly ILogger<Worker> _logger;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
+        public Worker(ILogger<Worker> logger)
         {
-            var request = new RestRequest("status", Method.Get);
-            var response = await _client.ExecuteAsync(request);
+            _logger = logger;
+        }
 
-            _logger.LogInformation($"RESPONSE: {response.StatusCode}, {response.Content}");
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                using(RestClient _client = new RestClient("http://webapi:8080"))
+                {
+                    var request = new RestRequest("status", Method.Get);
+                    var response = await _client.ExecuteAsync(request);
 
-            _logger.LogInformation($"hop hey lalaley");
-
-            await Task.Delay(500, stoppingToken);
+                    _logger.LogInformation($"RESPONSE: {response.StatusCode}, {response.Content}");
+                }
+                
+                await Task.Delay(500, stoppingToken);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 # Cloud Native Applications
 
-[Previous step](../step-09/README.md) - [Next step](../step-10/README.md)
+[Previous step](../step-08/README.md) - [Next step](../step-10/README.md)
 
 ## Step 9 - Modify the .NET Core Worker Service to call the WebApi and fetch the machine name
 
@@ -14,39 +14,41 @@
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
-    private readonly RestClient _client = new RestClient("http://webapi");
-
     public Worker(ILogger<Worker> logger)
     {
         _logger = logger;
     }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-
-            var request = new RestRequest("status", Method.Get);
-            var response = await _client.ExecuteAsync(request);
-
-            _logger.LogInformation($"RESPONSE: {response.StatusCode}, {response.Content}");
-
+            using(RestClient _client = new RestClient("http://webapi:8080"))
+            {
+                var request = new RestRequest("status", Method.Get);
+                var response = await _client.ExecuteAsync(request);
+                _logger.LogInformation($"RESPONSE: {response.StatusCode}, {response.Content}");
+            }
+            
             await Task.Delay(500, stoppingToken);
         }
     }
 }
 ```
 
-3. Open the Dockerfile for the WorkerService project and build it by right-clicking on the file:
+3. Right-click the Dockerfile in the WorkerService project to build it:
 
 ![building the workerservice image](sshot-9-2.png)
 
-4. If the image builds successfully, locate it in your local Docker images and push it to your Azure Container Registry:
+4. After a successful build, find the image in your local Docker images and push it to your Azure Container Registry:
 
 ![pushing the image](sshot-9-3.png)
 
-5. In the Visual Studio Code Kubernetes Activity pane, find your WorkerService pod and delete it. Kubernetes will automatically spin up a new instance from the Azure Container Registry due to the deployment settings that maintain one running replica:
+5. In Visual Studio Code's Kubernetes Activity pane, delete the WorkerService pod. Kubernetes will automatically spin up a new instance from the Azure Container Registry, due to the deployment's configuration to maintain one replica:
 
 ![deleteing workerservice](sshot-9-4.png)
 
-[Previous step](../step-09/README.md) - [Next step](../step-10/README.md)
+6. Monitor the WorkerService logs and observe that the machine names returned from WebApi vary. This variation occurs because the Kubernetes service for WebApi load balances requests across multiple pods, as dictated by the replica parameter:
+
+![deleteing workerservice](sshot-9-5.png)
+
+[Previous step](../step-08/README.md) - [Next step](../step-10/README.md)
