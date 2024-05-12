@@ -8,7 +8,11 @@
 
 ![creating mvc app](sshot-10-1.png)
 
-2. The web application should fetch and display responses from the load-balanced WebApi on a webpage. Open the mvc Web project in Visual Studio Code, add a 'ViewModels' folder, and create a C# source file inside it for the following class:
+2. Edit the launchSettings.json file to update the web API application's port to `8088`:
+
+![changing application port](sshot-10-2.png)
+
+3. The web application should fetch and display responses from the load-balanced WebApi on a webpage. Open the mvc Web project in Visual Studio Code, add a 'ViewModels' folder, and create a C# source file inside it for the following class:
 
 ```csharp
 using System.Collections.Generic;
@@ -35,13 +39,13 @@ namespace Web.ViewModels
 }
 ```
 
-![adding the RequestData model](sshot-10-2.png)
+![adding the RequestData model](sshot-10-3.png)
 
-3. Because you need to request the data from the WebApi, add the RestSharp NuGet package to the project using the `dotnet add package RestSharp` command in Terminal:
+4. Because you need to request the data from the WebApi, add the RestSharp NuGet package to the project using the `dotnet add package RestSharp` command in Terminal:
 
-![adding RestSharp NuGet package](sshot-10-3.png)
+![adding RestSharp NuGet package](sshot-10-4.png)
 
-4. Add a 'Helpers' folder and create a C# source file for the following class:
+5. Add a 'Helpers' folder and create a C# source file for the following class:
 
 ```csharp
 using System.Collections.Generic;
@@ -89,9 +93,9 @@ namespace Web.Helpers
 ```
 This class stores all WebApi responses in memory and converts them into a dataset for webpage display.
 
-![adding the RequestHelper class](sshot-10-4.png)
+![adding the RequestHelper class](sshot-10-5.png)
 
-5. Add a Worker Service to your ASP.NET Core MVC project to make repeated calls to the WebApi. Inside a new 'Workers' folder, create a C# source file containing the specified class:
+6. Add a Worker Service to your ASP.NET Core MVC project to make repeated calls to the WebApi. Inside a new 'Workers' folder, create a C# source file containing the specified class:
 
 ```csharp
 using System;
@@ -146,16 +150,16 @@ namespace Web.Workers
 
 The background worker will execute every 100 milliseconds to retrieve responses from the WebApi.
 
-![adding the RequestWorker class](sshot-10-5.png)
+![adding the RequestWorker class](sshot-10-6.png)
 
-6. Register these classes in the dependency injection container to integrate all components:
+7. Register these classes in the dependency injection container to integrate all components:
 
 ```csharp
 builder.Services.AddSingleton<RequestHelper>();
 builder.Services.AddHostedService<RequestWorker>();
 ```
 
-7. Modify the HomeController to include only a Get method that calls the RequestHelper:
+8. Modify the HomeController to include only a Get method that calls the RequestHelper:
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
@@ -192,9 +196,9 @@ namespace Web.Controllers
 }
 ```
 
-![changes to homecontroller](sshot-10-6.png)
+![changes to homecontroller](sshot-10-7.png)
 
-8. Update the views to display the data accordingly:
+9. Update the views to display the data accordingly:
 
 **~/Views/Home/Index.cshtml**
 
@@ -233,7 +237,7 @@ namespace Web.Controllers
 }
 ```
 
-**~/Views/Home/RequestData.cshtml**
+**~/Views/Home/_RequestData.cshtml**
 
 ```csharp
 @model Web.ViewModels.RequestData
@@ -261,23 +265,23 @@ namespace Web.Controllers
 </table>
 ```
 
-![adding the views](sshot-10-7.png)
+![adding the views](sshot-10-8.png)
 
-9. Use the command palette to create a Dockerfile for an ASP.NET Core application on Linux:
+10. Use the command palette to create a Dockerfile for an ASP.NET Core application on Linux:
 
-![adding dockerfile](sshot-10-8.png)
+![adding dockerfile](sshot-10-9.png)
 
-10. Build the Dockerfile and push the image to your Azure Container Registry:
+11. Build the Dockerfile and push the image to your Azure Container Registry:
 
-![building an image](sshot-10-9.png)
+![building an image](sshot-10-10.png)
 
-![pushing image to acr](sshot-10-10.png)
+![pushing image to acr](sshot-10-11.png)
 
-11. Create two new YAML files for deploying your web application: one for the deployment and another for the service exposing it to the Kubernetes internal HTTP network. Apply these YAML files using the command palette:
+12. Create two new YAML files for deploying your web application: one for the deployment and another for the service exposing it to the Kubernetes internal HTTP network. Apply these YAML files using the command palette:
 
 **deployment-web.yml**
 
-```csharp
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -300,12 +304,12 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: 80
+        - containerPort: 8088
 ```
 
 **service-web.yml**
 
-```csharp
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -315,12 +319,11 @@ spec:
     app: web
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 8088
 ```
 
-12. Check the Kubernetes cluster. You should see a web deployment with 1 pod, a webapi deployment with 3 pods, and a workerservice deployment with 1 pod running:
+13. Check the Kubernetes cluster. You should see a web deployment with 1 pod, a webapi deployment with 3 pods, and a workerservice deployment with 1 pod running:
 
-![web deployed to Kubernetes](sshot-10-11.png)
-
+![web deployed to Kubernetes](sshot-10-12.png)
 
 [Previous step](../step-09/README.md) - [Next step](../step-11/README.md)

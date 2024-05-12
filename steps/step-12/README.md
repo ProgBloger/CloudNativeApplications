@@ -1,49 +1,87 @@
 # Cloud Native Applications
 
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-11/README.md)
 
-## Step 1 - Connect Visual Studio Code to your Azure Subscription
+## Step 12 - Adding an NGINX ingress controller
 
-### Login to the Azure CLI
+With knowledge of the resource group holding AKS networking resources, proceed to install the NGINX ingress extension on your Kubernetes cluster.
 
-Open a terminal window, for example inside Visual Studio Code and use the following command to login to Azure:
+1. Installing the NGINX ingress extension can be performed manually, but you can also use a predefined deploy script.
 
-```
-az login
-```
-
-If you have multiple subscriptions with your Azure account use the following command to list all your subscriptions:
+[Find more information about deploying the NGINX ingress extension](https://kubernetes.github.io/ingress-nginx/deploy/)
 
 ```
-az account list -o table
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 ```
 
-Find the correct SubscriptionId and activate it using the following command:
+The script created a new namespace and deployed the necessary resources within it.
+
+![locating the nginx](sshot-12-1.png)
+
+2. Run the commands below to check if all pods are ready and to find the EXTERNAL-IP of the ingress load balancer:
 
 ```
-az account set -s <SubscriptionId>
+kubectl get pods --namespace=ingress-nginx
 ```
 
-### Login to Azure in Visual Studio Code
+```
+kubectl --namespace ingress-nginx get services -o wide
+```
 
-From Visual Studio, use the Ctrl+Shift+P keyboard shortcut to open the Command Palette and find Azure: Sign In to link your Visual Studio code instance with your azure login:
+![verifying nginx setup](sshot-12-2.png)
 
-![Azure: Sign In from Visual Studio Code](sshot-2.png)
+3. Checking the resource group with our AKS networking resources reveals a new PublicIP resource matching the IP address of our ingress load balancer:
 
-Your browser will open and you need to login using the Microsoft account linked to your Azure subscription:
+![verifying external ip address](sshot-12-3.png)
 
-![Microsoft Account](sshot-3.png)
+4. Register a custom DNS name for this IP address using the commands below:
 
-If your login was successful, you should be presented with a success screen:
+```
+az resource show --query id --resource-type Microsoft.Network/publicIPAddresses -n <public-ip resource name> -g <your kubernetes networking resource group>
+```
 
-![Azure: Sign In from Visual Studio Code](sshot-4.png)
+```
+az resource show --query id --resource-type Microsoft.Network/publicIPAddresses -n aks-cloud-native-app-we-public-ip -g MC_rg-cloud-native-app-west-europe_aks-cloud-native-app-we_westeurope
+```
 
-Use the Command Palette in Visual Studio once more to select the active subscription:
+![locating the ip resource id](sshot-12-4.png)
 
-![Azure: Sign In from Visual Studio Code](sshot-5.png)
+5. Copy the response from the previous script for use in the next script:
 
-Inside the Visual Studio Code IDE, you can have multiple subscriptions active. Use the checkboxes to make your selections:
+```
+az network public-ip update --ids "<copied-response>" --dns-name <dns-name>
+```
 
-![Azure: Sign In from Visual Studio Code](sshot-6.png)
+```
+az network public-ip update --ids "/subscriptions/a6e54b7d-ad5a-4f68-9219-3e976fbefc91/resourceGroups/mc_rg-cloud-native-app-west-europe_aks-cloud-native-app-we_westeurope/providers/Microsoft.Network/publicIPAddresses/kubernetes-public-ip" --dns-name cloud-native-applications
+```
 
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+6. Visit your custom DNS to verify if the NGINX ingress controller is operational. A 404 NOT FOUND response indicates it's working correctly!
+
+![verifying dns](sshot-12-5.png)
+
+7. Set your custom Kubernetes namespace as the default and deploy a new ingress controller to route traffic from the NGINX load balancer to your internal services:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: cloud-native-applications.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+```
+
+[Previous step](../step-11/README.md)

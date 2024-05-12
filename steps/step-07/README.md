@@ -12,7 +12,7 @@
 
 3. Rename WeatherForecast to Status and update the API to return only the current machine name:
 
-```c#
+```csharp
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();

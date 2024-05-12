@@ -10,9 +10,11 @@ public class HomeController : Controller
     private readonly RequestHelper _requestHelper;
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+        ILogger<HomeController> logger, RequestHelper requestHelper)
     {
         _logger = logger;
+        _requestHelper = requestHelper;
     }
 
     public IActionResult Index()

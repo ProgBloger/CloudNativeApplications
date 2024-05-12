@@ -1,49 +1,29 @@
 # Cloud Native Applications
 
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-10/README.md) - [Next step](../step-12/README.md)
 
-## Step 1 - Connect Visual Studio Code to your Azure Subscription
+## Step 11 - Locating the recource group that bundles all Kubernetes network resources
 
-### Login to the Azure CLI
+The web application is currently exposed only within the Kubernetes cluster. To make it accessible externally, additional configurations are required in Kubernetes and Azure.
 
-Open a terminal window, for example inside Visual Studio Code and use the following command to login to Azure:
-
-```
-az login
-```
-
-If you have multiple subscriptions with your Azure account use the following command to list all your subscriptions:
+1. To find the name of the resource group containing all Kubernetes networking components created by Azure, use the following command:
 
 ```
-az account list -o table
+az aks show --resource-group <your resource group> --name <your aks cluster> --query nodeResourceGroup -o tsv
 ```
 
-Find the correct SubscriptionId and activate it using the following command:
-
 ```
-az account set -s <SubscriptionId>
+az aks show --resource-group rg-cloud-native-app-west-europe --name aks-cloud-native-app-we --query nodeResourceGroup -o tsv
 ```
 
-### Login to Azure in Visual Studio Code
+In this instance, the command returns the following resource group name:
 
-From Visual Studio, use the Ctrl+Shift+P keyboard shortcut to open the Command Palette and find Azure: Sign In to link your Visual Studio code instance with your azure login:
+```
+MC_rg-cloud-native-app-west-europe_aks-cloud-native-app-we_westeurope
+```
 
-![Azure: Sign In from Visual Studio Code](sshot-2.png)
+2. Locate the resource group and its resources in the Azure Portal using the search feature:
 
-Your browser will open and you need to login using the Microsoft account linked to your Azure subscription:
+![locating the network group](sshot-11-1.png)
 
-![Microsoft Account](sshot-3.png)
-
-If your login was successful, you should be presented with a success screen:
-
-![Azure: Sign In from Visual Studio Code](sshot-4.png)
-
-Use the Command Palette in Visual Studio once more to select the active subscription:
-
-![Azure: Sign In from Visual Studio Code](sshot-5.png)
-
-Inside the Visual Studio Code IDE, you can have multiple subscriptions active. Use the checkboxes to make your selections:
-
-![Azure: Sign In from Visual Studio Code](sshot-6.png)
-
-[Previous step](../../README.md) - [Next step](../step-02/README.md)
+[Previous step](../step-10/README.md) - [Next step](../step-12/README.md)

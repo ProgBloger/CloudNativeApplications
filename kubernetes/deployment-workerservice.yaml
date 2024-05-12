@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: workerservice
-        image: dotnetdeveloperdays2022.azurecr.io/workerservice:latest
+        image: acrcloudnativeappwe.azurecr.io/workerservice:latest
         resources:
           limits:
             memory: "128Mi"
