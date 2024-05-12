@@ -84,4 +84,8 @@ spec:
               number: 80
 ```
 
+8. Open your addres in browser and verify that application works:
+
+![verifying result](sshot-12-6.png)
+
 [Previous step](../step-11/README.md)
