@@ -49,4 +49,3 @@ This guide helps you to build a Cloud Native Application that consists of a numb
 - [Step 10](steps/step-10/README.md) - Create an ASP.NET Core MVC Web application and deploy it to Kubernetes
 - [Step 11](steps/step-11/README.md) - Finding the recource group that bundles all Kubernetes network resources
 - [Step 12](steps/step-12/README.md) - Adding an NGINX ingress controller
-- [Step 13](steps/step-13/README.md) - Have some fun with the Blazor application and deployments of the WebApi

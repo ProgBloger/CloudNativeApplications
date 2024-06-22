@@ -18,7 +18,7 @@
 
 ![pushing image to the repository](sshot-6-4.png)
 
-3. The Visual Studio Code command palette will ask you to specify the container registry and, if connecteed to Azure properly, you should be able to find your container registry:
+3. The Visual Studio Code command palette will ask you to specify the container registry and, if connected to Azure properly, you should be able to find your container registry:
 
 ![pushing image to the repository](sshot-6-5.png)
 
