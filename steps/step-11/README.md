@@ -2,7 +2,7 @@
 
 [Previous step](../step-10/README.md) - [Next step](../step-12/README.md)
 
-## Step 11 - Locating the recource group that bundles all Kubernetes network resources
+## Step 11 - Locate the Resource Group for Kubernetes Network Resources
 
 The web application is currently exposed only within the Kubernetes cluster. To make it accessible externally, additional configurations are required in Kubernetes and Azure.
 

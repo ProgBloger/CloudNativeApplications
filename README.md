@@ -47,5 +47,5 @@ This guide helps you to build a Cloud Native Application that consists of a numb
 - [Step 08](steps/step-08/README.md) - Expose the ASP.NET Core WebApi as a network service
 - [Step 09](steps/step-09/README.md) - Make changes to the .NET Core Worker Service and make it call the WebApi to fetch the machine name
 - [Step 10](steps/step-10/README.md) - Create an ASP.NET Core MVC Web application and deploy it to Kubernetes
-- [Step 11](steps/step-11/README.md) - Finding the recource group that bundles all Kubernetes network resources
+- [Step 11](steps/step-11/README.md) - Locate the Resource Group for Kubernetes Network Resources
 - [Step 12](steps/step-12/README.md) - Adding an NGINX ingress controller
